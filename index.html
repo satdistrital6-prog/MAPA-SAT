@@ -11,534 +11,187 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <style>
-   
+ 
 
-  :root {
-     
-    --sat-bg:       #0B1E44;   
-    --sat-brand:    #1E88E5;   
-    --sat-brand2:   #42A5F5;   
-    --sat-text:     #E3F2FD;   
-    --sat-muted:    #90A4AE;   
-  }
+ 
+:root{
+  --sat-bg: #0B1E44;
+  --sat-bg-soft: #102552;
+  --sat-bg-elevated: #151f3b;
+  --sat-brand: #1E88E5;
+  --sat-brand2: #42A5F5;
+  --sat-danger: #dc3545;
+  --sat-warning: #ffc107;
+  --sat-success: #198754;
+  --sat-text-main: #f5f7ff;
+  --sat-text-soft: #c5c9de;
+  --sat-border: rgba(255,255,255,.15);
+  --sat-radius: 12px;
+  --sat-shadow: 0 4px 14px rgba(0,0,0,.28);
+}
 
-   
-  .sat-body {
-    background: var(--sat-bg);
-    color: var(--sat-text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
+ 
+body.sat-body{
+  background: var(--sat-bg);
+  color: var(--sat-text-main);
+  font-family: system-ui, sans-serif;
+}
 
-  .sat-brand {
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: .2px;
-  }
+ 
+#btnZonasCriticas{
+  margin-top: 14px !important;
+}
 
-  .sat-subtitle {
-    color: var(--sat-muted);
-    font-size: .9rem;
-  }
+ 
+#map{
+  border-radius:14px;
+  border:2px solid var(--sat-brand);
+  overflow:hidden;
+}
 
-   
-  .sat-body .card {
-    background: rgba(4, 12, 32, 0.96);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
-    color: var(--sat-text);
-  }
+ 
+.leaflet-tooltip{
+  background:rgba(14,32,80,.96);
+  border:1px solid var(--sat-border);
+  border-radius:8px;
+  color:#fff;
+  box-shadow: var(--sat-shadow);
+}
 
-  .sat-body .card-header {
-    background: linear-gradient(135deg, rgba(21, 101, 192, 0.15), rgba(13, 71, 161, 0.05));
-    border-bottom-color: rgba(255, 255, 255, 0.04);
-  }
+ 
+.sat-pro-panel{
+  background: rgba(7,14,34,.96);
+  border:1px solid var(--sat-border);
+  border-radius: var(--sat-radius);
+  box-shadow: var(--sat-shadow);
+  padding:0;
+  width:220px;
+  color:#fff;
+  overflow:hidden;
+  transition: all .22s ease;
+}
 
-  .sat-body .form-label {
-    font-size: .8rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--sat-muted);
-  }
+ 
+.sat-pro-header{
+  background: rgba(6,12,30,.86);
+  padding:8px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  font-weight:600;
+  font-size:.88rem;
+  user-select:none;
+}
 
-  .sat-body .form-control,
-  .sat-body .form-select {
-    background: rgba(3, 10, 26, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: var(--sat-text);
-    font-size: .85rem;
-  }
+.sat-pro-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
 
-  .sat-body .form-control:focus,
-  .sat-body .form-select:focus {
-    border-color: var(--sat-brand2);
-    box-shadow: 0 0 0 0.15rem rgba(66, 165, 245, 0.35);
-  }
+.sat-pro-header-hint{
+  opacity:.6;
+  font-size:.9rem;
+}
 
-  .sat-body .btn-sat-primary {
-    background: linear-gradient(135deg, var(--sat-brand), var(--sat-brand2));
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #fff;
-    font-size: .85rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-  }
+ 
+.sat-pro-body{
+  padding:8px 12px 12px 12px;
+}
 
-  .sat-body .btn-sat-primary:hover {
-    filter: brightness(1.08);
-    border-color: rgba(255, 255, 255, 0.26);
-  }
+ 
+.sat-pro-collapsed .sat-pro-body{
+  display:none;
+}
 
-  .sat-body .badge-sat {
-    background: rgba(30, 136, 229, 0.18);
-    border: 1px solid rgba(66, 165, 245, 0.65);
-    color: #BBDEFB;
-    font-weight: 500;
-    font-size: .75rem;
-    border-radius: 999px;
-  }
+ 
+.sat-pro-group{
+  margin-bottom:14px;
+  border:1px solid var(--sat-border);
+  border-radius:10px;
+  overflow:hidden;
+}
 
-   
-  #map.sat-map {
-    height: 70vh;           
-    min-height: 450px;      
-    border: 2px solid var(--sat-brand);
-    border-radius: 10px;
-    overflow: hidden;
-  }
+.sat-pro-group-header{
+  background: rgba(255,255,255,.05);
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:600;
+  user-select:none;
+}
 
-   
-  .sat-map-wrapper {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
-    border-radius: 12px;
-  }
+.sat-pro-group-body{
+  padding:8px 10px;
+  display:block;
+}
 
-   
-  .leaflet-control.filter-chip {
-    background: rgba(12, 22, 46, .92);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, .15);
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
-    padding: 6px 10px;
-    font-size: .85rem;
-    max-width: 380px;
-    line-height: 1.25;
-  }
+.sat-pro-group-collapsed .sat-pro-group-body{
+  display:none;
+}
 
-   
-  .leaflet-tooltip {
-    background: rgba(14, 32, 80, .96);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, .15);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
-  }
+ 
+.sat-pro-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:6px;
+  font-size:.78rem;
+}
 
-   
+.sat-pro-item input[type="radio"],
+.sat-pro-item input[type="checkbox"]{
+  accent-color: var(--sat-brand);
+  cursor:pointer;
+}
 
-   
-  .sat-row-alta {
-    background-color: rgba(220, 53, 69, 0.18);    
-  }
+ 
+.sat-pro-mobile{
+  width:165px !important;
+  font-size:.75rem !important;
+}
 
-  .sat-row-media {
-    background-color: rgba(255, 193, 7, 0.22);    
-  }
+.sat-pro-mobile .sat-pro-header{
+  padding:6px 10px !important;
+}
 
-  .sat-row-baja {
-    background-color: rgba(25, 135, 84, 0.18);    
-  }
+.sat-pro-mobile .sat-pro-group-body{
+  padding:6px 10px !important;
+}
 
-   
-  .sat-body table.sat-table-zonas {
-    color: var(--sat-text);
-    font-size: .88rem;
-  }
+ 
+.sat-map-btn{
+  border-radius:999px;
+  background:rgba(6,12,30,.96);
+  border:1px solid var(--sat-border);
+  padding:4px 8px;
+  font-size:.78rem;
+  color:#fff;
+  cursor:pointer;
+}
 
-  .sat-body table.sat-table-zonas thead {
-    background: rgba(4, 12, 32, 0.98);
-  }
+.sat-map-btn.active{
+  background:linear-gradient(135deg,var(--sat-brand),var(--sat-brand2));
+  border-color:#fff;
+}
 
-  .sat-body table.sat-table-zonas th {
-    text-transform: uppercase;
-    font-size: .76rem;
-    letter-spacing: .06em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
-  }
-
-  .sat-body table.sat-table-zonas td {
-    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-    vertical-align: middle;
-  }
-
-   
-
-   
-  .sat-pro-panel {
-    position: absolute;
-    top: 72px;
-    right: 16px;
-    z-index: 1050;  
-    max-width: 280px;
-
-    background: rgba(7, 16, 35, 0.94);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
-    color: #E3F2FD;
-
-    font-size: .82rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    backdrop-filter: blur(10px);
-  }
+ 
+@media(max-width:768px){
 
    
-  .sat-pro-inner {
-    padding: 8px 10px 10px;
-    max-height: calc(100vh - 180px);  
-    overflow-y: auto;
-    overflow-x: hidden;
+  .sat-pro-panel{
+    width:160px !important;
   }
 
-   
-  .sat-pro-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 6px;
+  .sat-pro-header{
+    font-size:.75rem !important;
   }
 
-  .sat-pro-title {
-    font-size: .86rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #E3F2FD;
-    white-space: nowrap;
+  .sat-pro-item{
+    font-size:.72rem !important;
   }
-
-  .sat-pro-title span {
-    color: var(--sat-brand2);
-  }
-
-  .sat-pro-header-tools {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: .75rem;
-    opacity: .9;
-  }
-
-   
-  .sat-pro-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.40);
-    background: linear-gradient(135deg, rgba(11, 30, 68, 0.95), rgba(20, 52, 104, 0.98));
-    color: #E3F2FD;
-    font-size: .78rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-    transition:
-      background .18s ease,
-      transform .12s ease,
-      box-shadow .18s ease,
-      border-color .18s ease;
-    white-space: nowrap;
-  }
-
-  .sat-pro-toggle-icon {
-    font-size: .9rem;
-    line-height: 1;
-  }
-
-  .sat-pro-toggle:hover {
-    background: linear-gradient(135deg, rgba(25, 118, 210, 0.98), rgba(66, 165, 245, 0.98));
-    border-color: rgba(255, 255, 255, 0.55);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-    transform: translateY(-1px);
-  }
-
-  .sat-pro-toggle:active {
-    transform: translateY(0);
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.55);
-  }
-
-   
-  .sat-pro-panel.sat-pro-collapsed {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    max-width: unset;
-    pointer-events: none;  
-  }
-
-  .sat-pro-panel.sat-pro-collapsed .sat-pro-inner {
-    display: none;
-  }
-
-  .sat-pro-panel.sat-pro-collapsed .sat-pro-toggle {
-    pointer-events: auto;
-    padding: 6px 8px;
-    border-radius: 999px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
-  }
-
-   
-  .sat-pro-section {
-    margin-bottom: 6px;
-  }
-
-  .sat-pro-section-label {
-    font-size: .74rem;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    opacity: .65;
-    margin: 4px 2px;
-  }
-
-   
-  .sat-pro-group {
-    margin-bottom: 6px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    overflow: hidden;
-  }
-
-  .sat-pro-group-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    padding: 6px 8px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    font-size: .78rem;
-    text-align: left;
-  }
-
-  .sat-pro-group-title {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-
-  .sat-pro-group-badge {
-    font-size: .70rem;
-    padding: 1px 6px;
-    border-radius: 999px;
-    background: rgba(30, 136, 229, 0.18);
-    border: 1px solid rgba(66, 165, 245, 0.55);
-    color: #BBDEFB;
-  }
-
-  .sat-pro-group-icon {
-    font-size: .8rem;
-    opacity: .85;
-    transition: transform .18s ease;
-  }
-
-  .sat-pro-group-body {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    padding: 0 8px;
-    display: block;
-    transition:
-      max-height .22s ease-out,
-      opacity .16s ease-out,
-      padding .18s ease-out;
-  }
-
-  .sat-pro-group.is-open .sat-pro-group-body {
-    max-height: 420px;  
-    opacity: 1;
-    padding: 4px 8px 8px;
-  }
-
-  .sat-pro-group.is-open .sat-pro-group-icon {
-    transform: rotate(180deg);
-  }
-
-   
-  .sat-pro-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 3px 0;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .sat-pro-item + .sat-pro-item {
-    border-top: 1px dashed rgba(255, 255, 255, 0.06);
-  }
-
-  .sat-pro-item-main {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .sat-pro-item-label {
-    font-size: .80rem;
-    line-height: 1.25;
-  }
-
-  .sat-pro-item-meta {
-    font-size: .70rem;
-    opacity: .7;
-  }
-
-   
-  .sat-pro-input[type="checkbox"],
-  .sat-pro-input[type="radio"] {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    flex-shrink: 0;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    background: rgba(0, 0, 0, 0.35);
-    cursor: pointer;
-    display: inline-block;
-    appearance: none;
-    position: relative;
-    transition:
-      border-color .16s ease,
-      background .16s ease,
-      box-shadow .16s ease,
-      transform .06s ease;
-  }
-
-  .sat-pro-input[type="radio"] {
-    border-radius: 999px;
-  }
-
-  .sat-pro-input:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(66, 165, 245, 0.8);
-  }
-
-  .sat-pro-input:checked {
-    border-color: var(--sat-brand2);
-    background: radial-gradient(circle at 30% 30%, #FFFFFF, var(--sat-brand2));
-    box-shadow: 0 0 0 1px rgba(66, 165, 245, 0.6);
-    transform: translateY(-0.5px);
-  }
-
-  .sat-pro-input::before {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    border-radius: inherit;
-    background: transparent;
-    transition: background .16s ease;
-  }
-
-  .sat-pro-input:checked::before {
-    background: rgba(255, 255, 255, 0.9);
-  }
-
-   
-  .sat-pro-item.is-disabled,
-  .sat-pro-input:disabled {
-    opacity: .35;
-    cursor: not-allowed;
-  }
-
-  .sat-pro-input:disabled + .sat-pro-item-main {
-    cursor: not-allowed;
-  }
-
-  .sat-pro-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .sat-pro-divider {
-    height: 1px;
-    margin: 6px 0;
-    background: linear-gradient(
-      to right,
-      transparent,
-      rgba(255, 255, 255, 0.18),
-      transparent
-    );
-  }
-
-   
-
-   
-  .sat-pro-panel.sat-pro-mobile {
-    top: auto;
-    bottom: 10px;
-    right: 50%;
-    transform: translateX(50%);
-    max-width: min(480px, 100% - 24px);
-  }
-
-  .sat-pro-panel.sat-pro-mobile .sat-pro-inner {
-    max-height: 50vh;
-  }
-
-  .sat-pro-panel.sat-pro-mobile.sat-pro-collapsed {
-    bottom: 10px;
-  }
-
-  .sat-pro-panel.sat-pro-mobile.sat-pro-collapsed .sat-pro-toggle {
-    justify-content: center;
-  }
-
-   
-  @media (max-width: 768px) {
-    #map.sat-map {
-      height: 60vh;
-      min-height: 360px;
-    }
-
-    .sat-pro-panel {
-      top: auto;
-      bottom: 10px;
-      right: 50%;
-      transform: translateX(50%);
-      max-width: min(420px, 100% - 24px);
-    }
-
-    .sat-pro-panel .sat-pro-inner {
-      max-height: 50vh;
-    }
-
-    .sat-pro-panel.sat-pro-collapsed {
-      bottom: 10px;
-      right: 50%;
-      transform: translateX(50%);
-    }
-
-    .sat-pro-panel.sat-pro-collapsed .sat-pro-toggle {
-      width: auto;
-      justify-content: center;
-    }
-
-    .sat-pro-title {
-      font-size: .80rem;
-    }
-  }
+}
 </style>
 
 <style>
@@ -611,19 +264,20 @@
     <input type="date" id="fHasta" class="form-control form-control-sm">
   </div>
 
-  <div class="col-6 col-md-2">
-    <label class="form-label text-white">Distrito</label>
-    <select id="fDistrito" class="form-select form-select-sm">
-      <option value="">(todos)</option>
-    </select>
-  </div>
+<div class="col-6 col-md-2">
+  <label class="form-label text-white">Distrito</label>
+  <select id="filtroDistrito" class="form-select form-select-sm">
+    <option value="">(todos)</option>
+  </select>
+</div>
 
-  <div class="col-6 col-md-2">
-    <label class="form-label text-white">Comisaría</label>
-    <select id="fComisaria" class="form-select form-select-sm">
-      <option value="">(todas)</option>
-    </select>
-  </div>
+<div class="col-6 col-md-2">
+  <label class="form-label text-white">Comisaría</label>
+  <select id="filtroComisaria" class="form-select form-select-sm">
+    <option value="">(todas)</option>
+  </select>
+</div>
+
 
   <div class="col-6 col-md-2">
     <label class="form-label text-white">Franja</label>
@@ -673,20 +327,40 @@
 
 
 <div class="d-flex flex-wrap gap-2 my-3">
+
+  
   <button class="btn btn-sm btn-outline-light" id="btnBase">🗺️ Base</button>
   <button class="btn btn-sm btn-outline-light" id="btnHybrid">🛰️ Satélite + Calles</button>
-  <button class="btn btn-sm btn-outline-info" id="btnHeat">🔥 Heatmap</button>
-  <button class="btn btn-sm btn-outline-light" id="btnPolys">⬛ Polígonos</button>
-  <button class="btn btn-sm btn-outline-info" id="btnCircles">🔵 Radios</button>
-  <button class="btn btn-sm btn-outline-danger" id="btnDelitos">🔴 Eventos Estudio</button>
-  <button class="btn btn-sm btn-outline-warning" id="btnRadar">📡 Radar Oscilante</button>
 
+  
+  <button class="btn btn-sm btn-outline-info" id="btnHeat">🔥 Heatmap</button>
+
+  
+  <button class="btn btn-sm btn-outline-light" id="btnPoligonos">⬛ Polígonos</button>
+
+  
+  <button class="btn btn-sm btn-outline-info" id="btnRadios">🔵 Radios</button>
+
+  
+  <button class="btn btn-sm btn-outline-danger" id="btnEventos">🔴 Eventos Estudio</button>
+
+  
+  <button class="btn btn-sm btn-outline-warning" id="btnRadar">📡 Radar Oscilante</button>
+<div class="btn-group" role="group" aria-label="HeatModes">
+  <button type="button" class="btn btn-sm btn-outline-light" id="hmOperativo">Operativo</button>
+  <button type="button" class="btn btn-sm btn-outline-warning" id="hmUmbral">Umbral</button>
+  <button type="button" class="btn btn-sm btn-outline-danger" id="hmPredictivo">Predictivo</button>
+</div>
+
+  
   <div class="d-flex align-items-center gap-2">
     <label class="form-label m-0 text-white">Tamaño puntos / heat</label>
     <input type="range" id="sPt" class="form-range" min="2" max="18" step="1" value="4" style="width:220px">
     <span id="sPtVal" class="small text-white-50">4</span>
   </div>
+
 </div>
+
 
 <h6 class="m-0 text-white">Policiamiento guiado</h6>
 <small class="text-white-50">
@@ -700,7 +374,7 @@
     <thead>
       <tr>
         <th>Distrito</th><th>Comisaría</th><th>Zona</th><th>Cuadrante</th>
-        <th>Franja</th><th>Rango</th><th>Criticidad</th><th>Eventos</th><th>Acciones</th>
+        <th>Franja</th><th>Rango</th><th>Criticidad (m)</th><th>Eventos</th><th>Acciones</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -723,6 +397,7 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/wellknown@0.5.0/wellknown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
@@ -741,13 +416,15 @@
 
 
 
-console.log("📡 SAT_MAP_CORE cargado");
+console.log("📡 SAT_MAP_CORE FINAL cargado");
+
 
 
 
 window.SATMAP = {
   map: null,
-
+  HEAT_MODE: "operativo",  
+  SHOULD_FIT: true,
   baseOSM: null,
   baseHYBRID: null,
   baseSAT: null,
@@ -758,342 +435,455 @@ window.SATMAP = {
     centroides: null,
     poligonos: null,
     radios: null,
-    eventos: null,   
-    delitos: null    
+    eventos: null,
+    delitos: null
   },
 
-  POINT_RADIUS: 4,
-  HEAT_RADIUS: 28
+  visibility: {
+    poligonos: false,
+    radios: false,
+    centroides: true,
+    eventos: true,
+    heat: false
+  },
+
+  POINT_RADIUS: 3,        
+  HEAT_RADIUS: 28,         
+  HEAT_OPACITY: 0.6,
 };
 
 
 
 
-
-window.initSATMap = function () {
+window.initSATMap = function(){
   const M = window.SATMAP;
 
-  
-  M.map = L.map("map").setView([-32.889, -68.845], 12);
+  M.map = L.map("map", { preferCanvas:true })
+          .setView([-32.889, -68.845], 12);
 
   
-  
-  M.map.createPane("pane-centroids");
-  M.map.getPane("pane-centroids").style.zIndex = 450;
+  M.map.createPane("pane-polygons");
+  M.map.getPane("pane-polygons").style.zIndex = 250;
 
-  
   M.map.createPane("pane-circles");
   M.map.getPane("pane-circles").style.zIndex = 300;
 
-  
+  M.map.createPane("pane-centroids");
+  M.map.getPane("pane-centroids").style.zIndex = 450;
+
   M.map.createPane("pane-events");
   M.map.getPane("pane-events").style.zIndex = 460;
 
   
-  M.baseOSM = L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    { maxZoom: 19 }
-  ).addTo(M.map);
+  M.baseOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19 }).addTo(M.map);
 
-  
   M.baseHYBRID = L.tileLayer(
     "https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
-    { subdomains: ["mt0", "mt1", "mt2", "mt3"], maxZoom: 20 }
-  );
+    { maxZoom: 20, subdomains:["mt0","mt1","mt2","mt3"] });
 
-  
   M.baseSAT = L.tileLayer(
     "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-    { subdomains: ["mt0", "mt1", "mt2", "mt3"], maxZoom: 20 }
-  );
+    { maxZoom: 20, subdomains:["mt0","mt1","mt2","mt3"] });
 
-  
   M.baseDARK = L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    { subdomains: "abcd", maxZoom: 19 }
-  );
+    { maxZoom: 19, subdomains:"abcd" });
 
-  console.log("🗺️ SAT_MAP_CORE → initSATMap() OK");
+  console.log("🗺️ Mapa SAT iniciado correctamente");
 };
 
 
 
 
-
-window.SATMAP.switchBase = function (type) {
+window.SATMAP.switchBase = function(type){
   const M = window.SATMAP;
 
-  [M.baseOSM, M.baseHYBRID, M.baseSAT, M.baseDARK].forEach(layer => {
-    if (layer && M.map.hasLayer(layer)) {
-      M.map.removeLayer(layer);
-    }
+  [M.baseOSM, M.baseHYBRID, M.baseSAT, M.baseDARK].forEach(l=>{
+    if(l && M.map.hasLayer(l)) M.map.removeLayer(l);
   });
 
-  if (type === "osm") {
-    M.baseOSM.addTo(M.map);
-  } else if (type === "sat") {
-    M.baseSAT.addTo(M.map);
-  } else if (type === "hibrido") {
-    M.baseHYBRID.addTo(M.map);
-  } else if (type === "dark") {
-    M.baseDARK.addTo(M.map);
-  } else {
-    M.baseOSM.addTo(M.map);
-  }
+  if      (type === "osm")     M.baseOSM.addTo(M.map);
+  else if (type === "sat")     M.baseSAT.addTo(M.map);
+  else if (type === "hibrido") M.baseHYBRID.addTo(M.map);
+  else if (type === "dark")    M.baseDARK.addTo(M.map);
+  else                         M.baseOSM.addTo(M.map);
 
-  console.log("🔄 Basemap cambiado →", type);
+  M.currentBase = type;
 };
 
 
 
 
-
-window.resetMapLayers = function () {
-  const M = window.SATMAP;
+window.resetMapLayers = function(){
+  const M   = window.SATMAP;
   const LYR = M.layers;
 
   
-  Object.values(LYR).forEach(layer => {
-    if (layer && M.map.hasLayer(layer)) {
-      M.map.removeLayer(layer);
-    }
+  const prev = structuredClone(M.visibility);
+
+  
+  Object.values(LYR).forEach(l=>{
+    if(l && M.map.hasLayer(l)) M.map.removeLayer(l);
   });
 
   
-  LYR.centroides = L.layerGroup().addTo(M.map);
-  LYR.poligonos  = L.layerGroup().addTo(M.map);
-  LYR.radios     = L.layerGroup().addTo(M.map);
-  LYR.eventos    = L.layerGroup().addTo(M.map); 
-  LYR.delitos    = L.layerGroup().addTo(M.map); 
-  LYR.heat       = null;                        
+  M.layers.poligonos  = L.layerGroup();
+  M.layers.radios     = L.layerGroup();
+  M.layers.centroides = L.layerGroup();
+  M.layers.eventos    = L.layerGroup();
+  M.layers.delitos    = L.layerGroup();
+  M.layers.heat       = null;
 
-  console.log("🔄 Capas reiniciadas");
+  
+  M.visibility = { ...prev };
 };
 
 
 
 
-
-
-window.SATMAP.enableHeat = function () {
-  const M = window.SATMAP;
-  if (M.layers.heat && !M.map.hasLayer(M.layers.heat)) {
-    M.layers.heat.addTo(M.map);
-  }
-};
-
-window.SATMAP.disableHeat = function () {
-  const M = window.SATMAP;
-  if (M.layers.heat && M.map.hasLayer(M.layers.heat)) {
-    M.map.removeLayer(M.layers.heat);
-  }
-};
-
-window.SATMAP.enablePolys = function () {
-  const M = window.SATMAP;
+window.SATMAP.applyLayerVisibility = function(){
+  const M   = window.SATMAP;
   const LYR = M.layers;
-  if (LYR.poligonos && !M.map.hasLayer(LYR.poligonos)) {
-    LYR.poligonos.addTo(M.map);
-  }
-};
+  const V   = M.visibility;
 
-window.SATMAP.disablePolys = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-  if (LYR.poligonos && M.map.hasLayer(LYR.poligonos)) {
-    M.map.removeLayer(LYR.poligonos);
-  }
-};
+  const show = (layer, flag)=>{
+    if(!layer) return;
+    if(flag) layer.addTo(M.map);
+    else M.map.removeLayer(layer);
+  };
 
-window.SATMAP.enableRadios = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-  if (LYR.radios && !M.map.hasLayer(LYR.radios)) {
-    LYR.radios.addTo(M.map);
-  }
-};
-
-window.SATMAP.disableRadios = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-  if (LYR.radios && M.map.hasLayer(LYR.radios)) {
-    M.map.removeLayer(LYR.radios);
-  }
-};
-
-window.SATMAP.enableCentroides = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-  if (LYR.centroides && !M.map.hasLayer(LYR.centroides)) {
-    LYR.centroides.addTo(M.map);
-  }
-};
-
-window.SATMAP.disableCentroides = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-  if (LYR.centroides && M.map.hasLayer(LYR.centroides)) {
-    M.map.removeLayer(LYR.centroides);
-  }
-};
-
-
-window.SATMAP.enableEventos = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-
-  if (LYR.eventos && !M.map.hasLayer(LYR.eventos)) {
-    LYR.eventos.addTo(M.map);
-  }
-  if (LYR.delitos && !M.map.hasLayer(LYR.delitos)) {
-    LYR.delitos.addTo(M.map);
-  }
-};
-
-window.SATMAP.disableEventos = function () {
-  const M = window.SATMAP;
-  const LYR = M.layers;
-
-  if (LYR.eventos && M.map.hasLayer(LYR.eventos)) {
-    M.map.removeLayer(LYR.eventos);
-  }
-  if (LYR.delitos && M.map.hasLayer(LYR.delitos)) {
-    M.map.removeLayer(LYR.delitos);
-  }
+  show(LYR.poligonos,  V.poligonos);
+  show(LYR.radios,     V.radios);
+  show(LYR.centroides, V.centroides);
+  show(LYR.eventos,    V.eventos);
+  show(LYR.delitos,    V.eventos);
+  show(LYR.heat,       V.heat);
 };
 
 
 
-window.renderSATMap = function (rows) {
-  const M = window.SATMAP;
+
+window.SATMAP.enablePolys  = ()=>{ SATMAP.visibility.poligonos  = true; SATMAP.applyLayerVisibility(); };
+window.SATMAP.disablePolys = ()=>{ SATMAP.visibility.poligonos  = false; SATMAP.applyLayerVisibility(); };
+
+window.SATMAP.enableRadios  = ()=>{ SATMAP.visibility.radios   = true; SATMAP.applyLayerVisibility(); };
+window.SATMAP.disableRadios = ()=>{ SATMAP.visibility.radios   = false; SATMAP.applyLayerVisibility(); };
+
+window.SATMAP.enableEventos  = ()=>{ SATMAP.visibility.eventos = true; SATMAP.applyLayerVisibility(); };
+window.SATMAP.disableEventos = ()=>{ SATMAP.visibility.eventos = false; SATMAP.applyLayerVisibility(); };
+
+window.SATMAP.enableHeat  = ()=>{ SATMAP.visibility.heat       = true; SATMAP.applyLayerVisibility(); };
+window.SATMAP.disableHeat = ()=>{ SATMAP.visibility.heat       = false; SATMAP.applyLayerVisibility(); };
+
+
+
+
+
+
+window.drawPoligonoSAT = function (wkt) {
+  try {
+    if (!wkt || typeof wkt !== "string") {
+      console.warn("drawPoligonoSAT: WKT vacío o inválido:", wkt);
+      return null;
+    }
+
+    
+    const geojson = wellknown.parse(wkt);
+
+    if (!geojson || typeof geojson !== "object") {
+      console.warn("drawPoligonoSAT: WKT no parseable:", wkt);
+      return null;
+    }
+
+    
+    return L.geoJSON(geojson, {
+      style: {
+        color: "#42A5F5",
+        weight: 2,
+        fillOpacity: 0.10,
+        pane: "pane-polygons"
+      }
+    });
+
+  } catch (e) {
+    console.error("❌ Error drawPoligonoSAT:", e.message, "WKT=", wkt);
+    return null;
+  }
+};
+
+function calcularHeatmapFiltrado(poligonos, centroides, delitos) {
+  try {
+
+    
+    const polysGeoJSON = poligonos
+      .map(p => p.toGeoJSON())
+      .filter(gj =>
+        gj &&
+        gj.type === "Feature" &&
+        gj.geometry &&
+        gj.geometry.type === "Polygon" &&
+        Array.isArray(gj.geometry.coordinates) &&
+        gj.geometry.coordinates.length > 0
+      );
+
+    
+    const dentro = (lat,lng) => {
+      if (!polysGeoJSON.length) return true;
+      const pt = turf.point([lng, lat]);
+      return polysGeoJSON.some(poly => turf.booleanPointInPolygon(pt, poly));
+    };
+
+    
+    
+    
+    const now = Date.now();
+    const horas = (ts) => (now - new Date(ts).getTime()) / 3600000;
+
+    const pesoTemporal = (h) => Math.exp(-h / 72);
+
+    const salida = {
+      delitos: [],
+      centroides: []
+    };
+
+    
+    
+    
+    centroides.forEach(r=>{
+      const lat = Number(r.Centroide_lat);
+      const lng = Number(r.Centroide_lng);
+      if (!isFinite(lat)||!isFinite(lng)) return;
+
+      if (!dentro(lat,lng)) return;
+
+      const h = horas(r.Fecha_hora || r.ts || r.timestamp || now);
+      const peso = pesoTemporal(h) * 2; 
+
+      salida.centroides.push([lat,lng,peso]);
+    });
+
+    
+    
+    
+    delitos.forEach(d=>{
+      if (!isFinite(d.lat)||!isFinite(d.lng)) return;
+
+      if (!dentro(d.lat,d.lng)) return;
+
+      const h = horas(d.Fecha_hora || d.ts || d.timestamp || now);
+      const peso = pesoTemporal(h);
+
+      salida.delitos.push([d.lat,d.lng,peso]);
+    });
+
+    return salida;
+
+  } catch(e) {
+    console.error("❌ Error en heatmap filtrado:", e);
+    return {delitos:[], centroides:[]};
+  }
+}
+
+
+
+
+
+window.buildSATTooltip = function(r){
+  return `
+    <div style="font-size:.78rem; line-height:1.25;">
+      <b>ID:</b> ${r.Alerta_ID}<br>
+      <b>Distrito:</b> ${r.Distrito}<br>
+      <b>Comisaría:</b> ${r.Comisaria}<br>
+      <b>Cuadrante:</b> ${r.Cuadrante}<br>
+      <b>Calles:</b> ${r.Calles_triangulacion}<br>
+      <b>Día:</b> ${r.Dia_operativo}<br>
+      <b>Franja:</b> ${r.Franja_operativa}<br>
+      <b>Rango SAT:</b> ${r.Rango_operativo_SAT}<br>
+      <b>Conf.:</b> ${r.Confiabilidad_leyenda}<br>
+      <b>Obs:</b> ${r.OBS || ""}<br>
+      <a href="${r.Link_Patrullaje_URL}" target="_blank" style="color:#42A5F5;">Ruta</a> |
+      <a href="${r.PDF_url}" target="_blank" style="color:#42A5F5;">PDF</a>
+    </div>`;
+};
+
+// ======================================================================
+
+
+window.renderSATMap = function(rows, delitos = []) {
+  const M   = window.SATMAP;
   const LYR = M.layers;
+
+  if (!M.map) {
+    console.warn("initSATMap() no ejecutado");
+    return;
+  }
 
   
   resetMapLayers();
 
-  const bounds = [];
-  const heatPoints = [];
+  
+  let bounds = L.latLngBounds();
 
+  
+  
+  
   rows.forEach(r => {
+    const lat = Number(r.Centroide_lat);
+    const lng = Number(r.Centroide_lng);
+    if (!isFinite(lat) || !isFinite(lng)) return;
 
     
-    
-    
-    if (r.Poligono_WKT && typeof window.drawPoligonoSAT === "function") {
+    if (r.Poligono_WKT) {
       const poly = drawPoligonoSAT(r.Poligono_WKT);
       if (poly) {
         poly.addTo(LYR.poligonos);
-
-        
-        try { bounds.push(poly.getBounds()); } catch (e) {}
+        bounds.extend(poly.getBounds());
       }
     }
 
     
-    
-    
-    const lat = Number(r.Centroide_lat);
-    const lng = Number(r.Centroide_lng);
+    const cp = L.circleMarker([lat, lng], {
+      radius:      M.POINT_RADIUS + 3,
+      color: "#1976d2",
+      fillColor: "#1976d2",
+      fillOpacity: 0.9,
+      weight:      1,
+      pane:        "pane-centroids"
+    });
 
-    if (!isFinite(lat) || !isFinite(lng)) return;
+    cp.bindTooltip(buildSATTooltip(r));
+    cp.addTo(LYR.centroides);
+    bounds.extend([lat, lng]);
 
-    
-    
-    
-    const campoDelito =
-      (r.EsDelito || r.esDelito || r.DELITO || r.TipoDelito || r.Tipo || "")
-        .toString()
-        .toUpperCase();
 
-    const esDelito = campoDelito.includes("DELITO") || campoDelito === "SI";
 
-    
-    
-    
-    const markerOptions = esDelito
-      ? {
-          radius: 7,
-          color: "#E53935",
-          weight: 2,
-          fillColor: "#E53935",
-          fillOpacity: 0.85,
-          pane: "pane-events"
-        }
-      : {
-          radius: 6,
-          color: "#42A5F5",
-          weight: 2,
-          fillColor: "#42A5F5",
-          fillOpacity: 0.7,
-          pane: "pane-centroids"
-        };
-
-    const cm = L.circleMarker([lat, lng], markerOptions);
-
-    if (typeof window.buildSATTooltip === "function") {
-      cm.bindTooltip(window.buildSATTooltip(r), {
-        direction: "top",
-        offset: [0, -6]
-      });
-    }
-
-    
-    
-    
-    if (esDelito) {
-      cm.addTo(LYR.delitos);
-    } else {
-      cm.addTo(LYR.eventos);
-    }
-
-    
-    
     
     const radio = Number(r.Radio_m) || 450;
 
     L.circle([lat, lng], {
-      radius: radio,
-      color: "#1E88E5",
-      weight: 1,
-      fillOpacity: 0.03,
-      interactive: false,
-      pane: "pane-circles"
+      radius:       radio,
+      color:        "#1E88E5",
+      weight:       1,
+      fillOpacity:  0.03,
+      pane:         "pane-circles",
+      interactive:  false
     }).addTo(LYR.radios);
-
-    
-    
-    
-    bounds.push([lat, lng]);
-
-    const weight =
-      Number(r.PesoHeat || r.Peso || r.Frecuencia || 0.7) || 0.7;
-
-    heatPoints.push([lat, lng, weight]);
   });
 
   
   
   
-  if (heatPoints.length && typeof L.heatLayer === "function") {
-    LYR.heat = L.heatLayer(heatPoints, {
-      radius: M.HEAT_RADIUS,
-      blur: M.HEAT_RADIUS * 0.8,
-      maxZoom: 18
-    }).addTo(M.map);
-  } else {
-    LYR.heat = null;
-  }
+  delitos.forEach(d => {
+    if (!isFinite(d.lat) || !isFinite(d.lng)) return;
+
+    L.circleMarker([d.lat, d.lng], {
+      radius:      M.POINT_RADIUS - 1,
+      color:       "#dc3545",
+      fillColor:   "#dc3545",
+      fillOpacity: 0.85,
+      weight:      1.2,
+      pane:        "pane-events"
+    }).addTo(LYR.delitos);
+
+    bounds.extend([d.lat, d.lng]);
+  });
+
+  
+  
+
+  const poligonosLeaflet = [];
+  LYR.poligonos.eachLayer(p => poligonosLeaflet.push(p));
+
+  const heatFiltered = calcularHeatmapFiltrado(
+    poligonosLeaflet,
+    rows,     
+    delitos   
+  );
+  const heatData = [
+  ...heatFiltered.delitos,
+  ...heatFiltered.centroides
+];
+
+
+ 
+
+
+
+
+let gradientFinal;
+
+if (SATMAP.HEAT_MODE === "operativo") {
+    
+    gradientFinal = (SATMAP.currentBase === "dark") ?
+    {
+      0.1: "#ffffb2",
+      0.3: "#fed976",
+      0.5: "#feb24c",
+      0.7: "#fd8d3c",
+      0.85:"#f03b20",
+      1.0: "#bd0026"
+    } :
+    {
+      0.0:  "#00000000",
+      0.3:  "#ffecb3",
+      0.5:  "#ffc107",
+      0.7:  "#ff9800",
+      0.85: "#f44336",
+      1.0:  "#b71c1c"
+    };
+}
+
+if (SATMAP.HEAT_MODE === "umbral") {
+    
+    gradientFinal = {
+      0.0: "#0000ff",
+      0.25:"#00ffff",
+      0.5: "#00ff00",
+      0.75:"#ffff00",
+      0.9: "#ff8000",
+      1.0: "#ff0000"
+    };
+}
+
+if (SATMAP.HEAT_MODE === "predictivo") {
+    
+    gradientFinal = {
+      0.1: "#ffe0b2",
+      0.3: "#ffb74d",
+      0.6: "#ff9800",
+      0.8: "#f57c00",
+      1.0: "#e65100"
+    };
+}
+
+
+if (heatData.length && L.heatLayer) {
+  LYR.heat = L.heatLayer(heatData, {
+    radius:     M.HEAT_RADIUS,
+    blur:       M.HEAT_RADIUS * 0.5,
+    maxZoom:    18,
+    maxOpacity: M.HEAT_OPACITY,
+    gradient:   gradientFinal
+  });
+}
+
+
 
   
   
   
-  if (bounds.length) {
-    try {
-      M.map.fitBounds(bounds, { padding: [50, 50] });
-    } catch (e) {}
-  }
+  M.applyLayerVisibility();
 
-  console.log("🗺️ renderSATMap() → OK");
+
+
+
+if (SATMAP.SHOULD_FIT && bounds.isValid()) {
+    M.map.fitBounds(bounds, { padding: [40, 40] });
+}
+
+
+  console.log("🗺️ renderSATMap completado:", rows.length, "eventos");
 };
 </script>
 <script>
@@ -1177,6 +967,7 @@ function getComisaria(r) {
 
 
 
+
 function computeCriticidad(r) {
   const n = Number(r.Cantidad_eventos || 0);
   if (n >= 5) return "Alta";
@@ -1245,8 +1036,8 @@ function getFilteredDelitos() {
 function filterRows() {
   const [d1,d2] = currentDateRange();
 
-  const dist  = norm(document.getElementById("fDistrito")?.value);
-  const com   = norm(document.getElementById("fComisaria")?.value);
+  const dist  = norm(document.getElementById("filtroDistrito")?.value);
+  const com   = norm(document.getElementById("filtroComisaria")?.value);
   const fr    = norm(document.getElementById("fFranja")?.value);
   const dia   = norm(document.getElementById("fDia")?.value);
   const est   = norm(document.getElementById("fEstado")?.value);
@@ -1463,74 +1254,66 @@ function renderAll() {
 
 
 
+function repoblarComisarias(distritoSeleccionado) {
+  const selComisaria = document.getElementById("filtroComisaria");
+  if (!selComisaria) return;
 
+  const data = window.DATA || [];
+  const set = new Set();
 
-document.addEventListener("DOMContentLoaded", () => {
-  preprocessData();
-  window.initSATMap?.();
-  window.SAT_addLayerPanel?.();
-  initFilters();
-  initButtons();
-  updateHeaderKPI();
-  renderAll();
-});
+  data.forEach(r => {
+    if (!distritoSeleccionado || distritoSeleccionado === "") {
+      set.add(getComisaria(r));
+    } else if (r.Distrito === distritoSeleccionado) {
+      set.add(getComisaria(r));
+    }
+  });
+
+  selComisaria.innerHTML = "";
+
+  const optAll = document.createElement("option");
+  optAll.value = "";
+  optAll.textContent = "(todas)";
+  selComisaria.appendChild(optAll);
+
+  Array.from(set).filter(Boolean).sort().forEach(comi => {
+    const op = document.createElement("option");
+    op.value = comi;
+    op.textContent = comi;
+    selComisaria.appendChild(op);
+  });
+}
 
 
 
 
 function initFilters() {
-  const fDist    = document.getElementById("fDistrito");
-  const fCom     = document.getElementById("fComisaria");
+  const fDist    = document.getElementById("filtroDistrito");
+  const fCom     = document.getElementById("filtroComisaria");
   const fFranja  = document.getElementById("fFranja");
   const fDia     = document.getElementById("fDia");
   const fVentana = document.getElementById("fVentana");
   const fEstado  = document.getElementById("fEstado");
 
   
-  if (fCom) {
-    const todasCom = uniq(DATA.map(getComisaria));
-    fCom.innerHTML = "<option value=''> (todas) </option>";
-    todasCom.forEach(c => {
-      const o = document.createElement("option");
-      o.value = c;
-      o.textContent = c;
-      fCom.appendChild(o);
-    });
-  }
-
-  
   if (fDist) {
-    uniq(DATA.map(r=>r.Distrito)).forEach(v => {
+    fDist.innerHTML = "<option value=''> (todos) </option>";
+    uniq(DATA.map(r => r.Distrito)).forEach(v => {
       const o = document.createElement("option");
       o.value = v;
       o.textContent = v;
       fDist.appendChild(o);
     });
 
-    
     fDist.addEventListener("change", () => {
-      const dSel = norm(fDist.value);
-
-      const comsFiltradas = uniq(
-        DATA.filter(r => !dSel || norm(r.Distrito) === dSel)
-            .map(getComisaria)
-      );
-
-      if (fCom) {
-        const prev = fCom.value;
-        fCom.innerHTML = "<option value=''> (todas) </option>";
-        comsFiltradas.forEach(c=>{
-          const o = document.createElement("option");
-          o.value = c;
-          o.textContent = c;
-          fCom.appendChild(o);
-        });
-        fCom.value = comsFiltradas.includes(prev) ? prev : "";
-      }
-
+      const distritoSel = fDist.value || "";
+      repoblarComisarias(distritoSel);
       renderAll();
     });
   }
+
+  
+  repoblarComisarias("");
 
   
   fCom?.addEventListener("change", renderAll);
@@ -1552,55 +1335,134 @@ function initFilters() {
 
 
 function initButtons() {
-  const btnBase    = document.getElementById("btnBase");
-  const btnHybrid  = document.getElementById("btnHybrid");
-  const btnHeat    = document.getElementById("btnHeat");
-  const btnRadar   = document.getElementById("btnRadar");
-  const sPt        = document.getElementById("sPt");
-  const sPtVal     = document.getElementById("sPtVal");
-  const btnCrit    = document.getElementById("btnZonasCriticas");
+  console.log("🔧 initButtons() cargado");
 
-
-  btnBase && (btnBase.onclick = () => window.SATMAP.switchBase("osm"));
-  btnHybrid && (btnHybrid.onclick = () => window.SATMAP.switchBase("hibrido"));
-
-  if (btnHeat) {
-    btnHeat.onclick = () => {
-      const act = !btnHeat.classList.contains("btn-info");
-      btnHeat.classList.toggle("btn-info", act);
-      btnHeat.classList.toggle("btn-outline-info", !act);
-      act ? window.SATMAP.enableHeat?.() : window.SATMAP.disableHeat?.();
-
-
-    };
+  if (!window.SATMAP) {
+    console.warn("SATMAP no inicializado aún");
+    return;
   }
 
+  const toggleButton = (btn, onFn, offFn) => {
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const isOn = !btn.classList.contains("active");
+      btn.classList.toggle("active", isOn);
+      if (isOn) onFn();
+      else offFn();
+    });
+  };
 
-  if (btnRadar) btnRadar.onclick = window.toggleRadarGlobal;
+  const btnPolys = document.getElementById("btnPoligonos");
+  toggleButton(btnPolys, () => SATMAP.enablePolys(), () => SATMAP.disablePolys());
 
-  if (sPt && sPtVal) {
-    sPt.oninput = () => {
-      const v = Number(sPt.value);
-      window.SATMAP.POINT_RADIUS = v;
-      window.SATMAP.HEAT_RADIUS  = Math.max(12, Math.round(v*7));
-      sPtVal.textContent = v;
+  const btnRadios = document.getElementById("btnRadios");
+  toggleButton(btnRadios, () => SATMAP.enableRadios(), () => SATMAP.disableRadios());
+
+  const btnCentroides = document.getElementById("btnCentroides");
+  toggleButton(
+    btnCentroides,
+    () => {
+      SATMAP.visibility.centroides = true;
+      SATMAP.applyLayerVisibility();
+    },
+    () => {
+      SATMAP.visibility.centroides = false;
+      SATMAP.applyLayerVisibility();
+    }
+  );
+
+  const btnEventos = document.getElementById("btnEventos");
+  toggleButton(
+    btnEventos,
+    () => SATMAP.enableEventos(),
+    () => SATMAP.disableEventos()
+  );
+
+  const btnHeat = document.getElementById("btnHeat");
+  toggleButton(btnHeat, () => SATMAP.enableHeat(), () => SATMAP.disableHeat());
+
+  const btnRadar = document.getElementById("btnRadar");
+  if (btnRadar && window.toggleRadarGlobal) {
+    btnRadar.addEventListener("click", () => {
+      const isOn = !btnRadar.classList.contains("active");
+      btnRadar.classList.toggle("active", isOn);
+      toggleRadarGlobal(isOn);
+    });
+  }
+
+  const btnZonas = document.getElementById("btnZonasCriticas");
+  if (btnZonas) {
+    btnZonas.addEventListener("click", () => {
+      const isOn = !btnZonas.classList.contains("active");
+      btnZonas.classList.toggle("active", isOn);
+
+      window.SAT_FILTERS = window.SAT_FILTERS || {};
+      SAT_FILTERS.criticalOnly = isOn;
       renderAll();
-    };
-  }
-  if (btnCrit) {
-    btnCrit.onclick = () => {
-      window.SAT_FILTERS.criticalOnly = !window.SAT_FILTERS.criticalOnly;
-
-      
-      btnCrit.classList.toggle("btn-outline-danger", !window.SAT_FILTERS.criticalOnly);
-      btnCrit.classList.toggle("btn-danger", window.SAT_FILTERS.criticalOnly);
-
-      renderAll();
-    };
+    });
   }
 
+  const sPt = document.getElementById("sPt");
+  if (sPt) {
+  sPt.addEventListener("input", () => {
+  SATMAP.SHOULD_FIT = false;
+  const v = Number(sPt.value);
 
+  
+  SATMAP.POINT_RADIUS = 4;        
+
+  
+  SATMAP.HEAT_RADIUS  = 10 + v * 4;
+  SATMAP.HEAT_OPACITY = 0.30 + (v / 25);  
+
+  renderAll();
+  SATMAP.SHOULD_FIT = true;
+});
+
+  }
+
+  console.log("✔ initButtons() finalizado");
 }
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  preprocessData();
+  window.initSATMap?.();
+  window.SAT_addLayerPanel?.();
+  initFilters();
+  initButtons();
+  updateHeaderKPI();
+  renderAll();
+});
+
+
+
+document.getElementById("hmOperativo")?.addEventListener("click", ()=>{
+  SATMAP.HEAT_MODE = "operativo";
+  renderAll();
+  SATMAP.SHOULD_FIT = true;
+});
+
+document.getElementById("hmUmbral")?.addEventListener("click", ()=>{
+  SATMAP.SHOULD_FIT = false;
+SATMAP.HEAT_MODE = "umbral";
+renderAll();
+SATMAP.SHOULD_FIT = true;
+});
+
+document.getElementById("hmPredictivo")?.addEventListener("click", ()=>{
+  SATMAP.HEAT_MODE = "predictivo";
+  renderAll();
+  SATMAP.SHOULD_FIT = true;
+});
+
+
+
+
+
+
 </script>
 <script>
 
@@ -1945,8 +1807,10 @@ window.SAT_buildGeoLayers = function () {
 
 
 
+console.log("🧩 MAP_TOOLS_PRO v4.3 cargado");
 
-console.log("🧩 MAP_TOOLS_PRO v4.1 cargado");
+
+
 
 L.Control.SATLayers = L.Control.extend({
 
@@ -1954,181 +1818,144 @@ L.Control.SATLayers = L.Control.extend({
 
   onAdd(map) {
 
-    
     const div = L.DomUtil.create("div", "sat-pro-panel leaflet-control");
 
     
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      div.classList.add("sat-pro-mobile", "sat-pro-collapsed");
-    } else {
-      div.classList.add("sat-pro-collapsed");
+    if (window.matchMedia && window.matchMedia("(max-width: 768px)").matches) {
+      div.classList.add("sat-pro-collapsed", "sat-pro-mobile");
     }
 
     
     
-    
     div.innerHTML = `
-      <!-- TOGGLE PRINCIPAL -->
-      <button id="satProToggle" class="sat-pro-toggle">
-        <span class="sat-pro-toggle-icon">🗺️</span>
-        CAPAS
-      </button>
+      <div class="sat-pro-header">
+        <span class="sat-pro-title">🗂️ Capas</span>
+        <span class="sat-pro-header-hint">▼</span>
+      </div>
 
-      <!-- CONTENIDO DEL PANEL -->
-      <div class="sat-pro-inner">
+      <div class="sat-pro-body">
 
-        <!-- ========================== -->
-        <!--     GRUPO: BASEMAPS        -->
-        <!-- ========================== -->
-        <section class="sat-pro-group is-open">
-          <button class="sat-pro-group-header">
-            <div class="sat-pro-group-title">Base</div>
-            <span class="sat-pro-group-icon">⌃</span>
-          </button>
-
+        <!-- ====================
+             GRUPO BASE
+        ====================== -->
+        <div class="sat-pro-group">
+          <div class="sat-pro-group-header">Base</div>
           <div class="sat-pro-group-body">
+
             <label class="sat-pro-item">
-              <input type="radio" class="sat-pro-input" name="sat-base" value="osm">
-              <div class="sat-pro-item-main">
-                <span class="sat-pro-item-label">OSM</span>
-              </div>
+              <input type="radio" name="sat-base" value="osm">
+              <span>OSM</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="radio" class="sat-pro-input" name="sat-base" value="sat">
-              <div class="sat-pro-item-main">
-                <span class="sat-pro-item-label">Satélite</span>
-              </div>
+              <input type="radio" name="sat-base" value="sat">
+              <span>Satélite</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="radio" class="sat-pro-input" name="sat-base" value="hibrido">
-              <div class="sat-pro-item-main">
-                <span class="sat-pro-item-label">Híbrido</span>
-              </div>
+              <input type="radio" name="sat-base" value="hibrido">
+              <span>Híbrido</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="radio" class="sat-pro-input" name="sat-base" value="dark">
-              <div class="sat-pro-item-main">
-                <span class="sat-pro-item-label">Dark</span>
-              </div>
+              <input type="radio" name="sat-base" value="dark">
+              <span>Dark</span>
             </label>
+
           </div>
-        </section>
+        </div>
 
-        <!-- ========================== -->
-        <!--       GRUPO: GEOBASE       -->
-        <!-- ========================== -->
-        <section class="sat-pro-group">
-          <button class="sat-pro-group-header">
-            <div class="sat-pro-group-title">GeoBase</div>
-            <span class="sat-pro-group-icon">⌃</span>
-          </button>
-
+        <!-- ====================
+             GRUPO GEOBASE
+        ====================== -->
+        <div class="sat-pro-group">
+          <div class="sat-pro-group-header">GeoBase</div>
           <div class="sat-pro-group-body">
+
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gJur">
-              <span class="sat-pro-item-label">Jurisdicciones</span>
+              <input type="checkbox" id="gJur">
+              <span>Jurisdicciones</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gLoc">
-              <span class="sat-pro-item-label">Localidades</span>
+              <input type="checkbox" id="gLoc">
+              <span>Localidades</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gC1">
-              <span class="sat-pro-item-label">Cuadrante 1</span>
+              <input type="checkbox" id="gC1">
+              <span>Cuadrante 1</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gC2">
-              <span class="sat-pro-item-label">Cuadrante 2</span>
+              <input type="checkbox" id="gC2">
+              <span>Cuadrante 2</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gC3">
-              <span class="sat-pro-item-label">Cuadrante 3</span>
+              <input type="checkbox" id="gC3">
+              <span>Cuadrante 3</span>
             </label>
 
             <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="gC4">
-              <span class="sat-pro-item-label">Cuadrante 4</span>
+              <input type="checkbox" id="gC4">
+              <span>Cuadrante 4</span>
             </label>
+
           </div>
-        </section>
+        </div>
 
-        <!-- ========================== -->
-        <!--          GRUPO SAT         -->
-        <!-- ========================== -->
-        <section class="sat-pro-group">
-          <button class="sat-pro-group-header">
-            <div class="sat-pro-group-title">SAT</div>
-            <span class="sat-pro-group-icon">⌃</span>
-          </button>
-
-          <div class="sat-pro-group-body">
-            <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="sPol">
-              <span class="sat-pro-item-label">Polígonos</span>
-            </label>
-
-            <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="sRad">
-              <span class="sat-pro-item-label">Radios</span>
-            </label>
-
-            <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="sCen">
-              <span class="sat-pro-item-label">Centroides</span>
-            </label>
-
-            <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="sEvt">
-              <span class="sat-pro-item-label">Eventos estudio</span>
-            </label>
-
-            <label class="sat-pro-item">
-              <input type="checkbox" class="sat-pro-input" id="sHeat">
-              <span class="sat-pro-item-label">Heatmap</span>
-            </label>
-          </div>
-        </section>
-
-      </div><!-- /sat-pro-inner -->
+      </div>
     `;
 
+    
     L.DomEvent.disableClickPropagation(div);
 
     
     
     
-    const btnToggle = div.querySelector("#satProToggle");
+    const header = div.querySelector(".sat-pro-header");
+    const body   = div.querySelector(".sat-pro-body");
 
-    btnToggle.addEventListener("click", () => {
-      div.classList.toggle("sat-pro-collapsed");
-    });
+    if (header && body) {
+      header.addEventListener("click", () => {
+        div.classList.toggle("sat-pro-collapsed");
+      });
+    }
 
     
     
     
-    div.querySelectorAll(".sat-pro-group-header").forEach(header => {
-      header.addEventListener("click", (ev) => {
+    const groupHeaders = div.querySelectorAll(".sat-pro-group-header");
+
+    groupHeaders.forEach(h => {
+      h.addEventListener("click", ev => {
         ev.stopPropagation(); 
-        const group = header.closest(".sat-pro-group");
-        group.classList.toggle("is-open");
+        const group = h.closest(".sat-pro-group");
+        if (group) group.classList.toggle("sat-pro-group-collapsed");
       });
     });
+
+    
+    if (div.classList.contains("sat-pro-mobile")) {
+      div.querySelectorAll(".sat-pro-group").forEach(g => {
+        g.classList.add("sat-pro-group-collapsed");
+      });
+    }
 
     
     
     
     const baseRadios = div.querySelectorAll("input[name='sat-base']");
+
     baseRadios.forEach(radio => {
       radio.addEventListener("change", e => {
-        const val = e.target.value;
-        if (window.SATMAP && window.SATMAP.switchBase) {
+        const val = e.target.value || "osm";
+
+        if (!window.SATMAP) window.SATMAP = {};
+        window.SATMAP.currentBase = val;
+
+        if (window.SATMAP.switchBase) {
           window.SATMAP.switchBase(val);
         }
       });
@@ -2136,95 +1963,65 @@ L.Control.SATLayers = L.Control.extend({
 
     
     const currentBase = (window.SATMAP && window.SATMAP.currentBase) || "osm";
-    const rb = div.querySelector(`input[value="${currentBase}"]`);
+    const rb = div.querySelector(
+      "input[name='sat-base'][value='" + currentBase + "']"
+    );
     if (rb) rb.checked = true;
 
     
     
     
-    const toggleGeo = (id, getLayerFn) => {
-      const el = div.querySelector(`#${id}`);
+    const safeToggleGeo = (id, layerFn) => {
+      const el = div.querySelector("#" + id);
       if (!el) return;
 
       el.addEventListener("change", () => {
         const G = window.SATMAP_GEO || {};
-        const layer = getLayerFn(G);
+        const layer = layerFn(G);
+
         if (!layer) {
-          console.warn("GeoBase no cargada:", id);
+          console.warn("GeoBase no cargada o capa no encontrada:", id);
           el.checked = false;
           return;
         }
-        el.checked ? map.addLayer(layer) : map.removeLayer(layer);
-      });
-    };
 
-    toggleGeo("gJur", G => G.jurisdicciones);
-    toggleGeo("gLoc", G => G.localidades);
-    toggleGeo("gC1",  G => G.cuadrantes?.["1"]);
-    toggleGeo("gC2",  G => G.cuadrantes?.["2"]);
-    toggleGeo("gC3",  G => G.cuadrantes?.["3"]);
-    toggleGeo("gC4",  G => G.cuadrantes?.["4"]);
-
-    
-    
-    
-    const toggleSAT = (id, enableFn, disableFn) => {
-      const el = div.querySelector(`#${id}`);
-      if (!el) return;
-
-      if (window.SATMAP?.uiState?.[id] !== undefined) {
-        el.checked = window.SATMAP.uiState[id];
-      }
-
-      el.addEventListener("change", () => {
-        if (!window.SATMAP) return;
-        window.SATMAP.uiState = window.SATMAP.uiState || {};
-        window.SATMAP.uiState[id] = el.checked;
-
-        el.checked ? enableFn?.() : disableFn?.();
-      });
-    };
-
-    toggleSAT("sPol",  () => SATMAP.enablePolys?.(),      () => SATMAP.disablePolys?.());
-    toggleSAT("sRad",  () => SATMAP.enableRadios?.(),     () => SATMAP.disableRadios?.());
-    toggleSAT("sCen",  () => SATMAP.enableCentroides?.(), () => SATMAP.disableCentroides?.());
-    toggleSAT("sEvt",  () => SATMAP.enableEventos?.(),    () => SATMAP.disableEventos?.());
-
-    
-    const heat = div.querySelector("#sHeat");
-    if (heat) {
-      if (window.SATMAP?.uiState?.["sHeat"] !== undefined) {
-        heat.checked = window.SATMAP.uiState["sHeat"];
-      }
-
-      heat.addEventListener("change", () => {
-        const pts = window.SATMAP.dataPoints || [];
-        if (!pts.length) {
-          console.warn("No hay puntos para heatmap");
-          heat.checked = false;
-          return;
+        if (el.checked) {
+          if (!map.hasLayer(layer)) map.addLayer(layer);
+        } else {
+          if (map.hasLayer(layer)) map.removeLayer(layer);
         }
-        heat.checked ? SATMAP.enableHeat?.() : SATMAP.disableHeat?.();
       });
-    }
+    };
 
+    safeToggleGeo("gJur", G => G.jurisdicciones);
+    safeToggleGeo("gLoc", G => G.localidades);
+    safeToggleGeo("gC1", G => (G.cuadrantes && G.cuadrantes["1"]) || null);
+    safeToggleGeo("gC2", G => (G.cuadrantes && G.cuadrantes["2"]) || null);
+    safeToggleGeo("gC3", G => (G.cuadrantes && G.cuadrantes["3"]) || null);
+    safeToggleGeo("gC4", G => (G.cuadrantes && G.cuadrantes["4"]) || null);
+
+    
     return div;
-  }
+  },
+
+  onRemove() {}
 });
 
 
 
 
 window.SAT_addLayerPanel = function() {
-  if (!window.SATMAP?.map) {
-    console.warn("SAT_addLayerPanel: mapa no inicializado");
+  if (!window.SATMAP || !window.SATMAP.map) {
+    console.warn("SAT_addLayerPanel: mapa aún no inicializado");
     return;
   }
-  new L.Control.SATLayers().addTo(window.SATMAP.map);
+  const ctl = new L.Control.SATLayers();
+  ctl.addTo(window.SATMAP.map);
 };
-
 </script>
+
 
 </body>
 </html>
+
 
