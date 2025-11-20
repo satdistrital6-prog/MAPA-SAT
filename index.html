@@ -59,6 +59,35 @@ body.sat-body{
 }
 
  
+.leaflet-tooltip.sat-centroid-tip{
+  max-width: 260px;
+  padding: 6px 8px;
+}
+
+.sat-tooltip-pro{
+  font-size: .78rem;
+  line-height: 1.25;
+}
+
+.sat-tooltip-row + .sat-tooltip-row{
+  margin-top: 2px;
+}
+
+.sat-tooltip-links a{
+  color: #42A5F5;
+  text-decoration: none;
+}
+
+.sat-tooltip-links a:hover{
+  text-decoration: underline;
+}
+
+ 
+.leaflet-tooltip-pane {
+  z-index: 9999 !important;
+}
+
+ 
 .sat-pro-panel{
   background: rgba(7,14,34,.96);
   border:1px solid var(--sat-border);
@@ -145,6 +174,17 @@ body.sat-body{
   accent-color: var(--sat-brand);
   cursor:pointer;
 }
+
+.sat-centroid-tip {
+  max-width: 240px;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 8px;
+  pointer-events: auto;
+}
+
 
  
 .sat-pro-mobile{
@@ -374,7 +414,7 @@ body.sat-body{
     <thead>
       <tr>
         <th>Distrito</th><th>Comisaría</th><th>Zona</th><th>Cuadrante</th>
-        <th>Franja</th><th>Rango</th><th>Criticidad (m)</th><th>Eventos</th><th>Acciones</th>
+        <th>Franja</th><th>Rango</th><th>Criticidad</th><th>Eventos</th><th>Acciones</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -462,17 +502,19 @@ window.initSATMap = function(){
           .setView([-32.889, -68.845], 12);
 
   
-  M.map.createPane("pane-polygons");
-  M.map.getPane("pane-polygons").style.zIndex = 250;
+M.map.createPane("pane-polygons");
+M.map.getPane("pane-polygons").style.zIndex = 300;
 
-  M.map.createPane("pane-circles");
-  M.map.getPane("pane-circles").style.zIndex = 300;
+M.map.createPane("pane-circles");
+M.map.getPane("pane-circles").style.zIndex = 400;
 
-  M.map.createPane("pane-centroids");
-  M.map.getPane("pane-centroids").style.zIndex = 450;
+M.map.createPane("pane-centroids");
+M.map.getPane("pane-centroids").style.zIndex = 600;
 
-  M.map.createPane("pane-events");
-  M.map.getPane("pane-events").style.zIndex = 460;
+M.map.createPane("pane-events");
+M.map.getPane("pane-events").style.zIndex = 700;
+
+
 
   
   M.baseOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -687,29 +729,88 @@ function calcularHeatmapFiltrado(poligonos, centroides, delitos) {
 
 
 
+window.buildSATTooltip = function(r) {
+  
+  const distrito   = r.Distrito || "";
+  const comisaria  = r.Comisaría || r.Comisaria || "";
+  const cuadrante  = r.Cuadrante || "";
+  const zona       = r.Zona_centroide || "";
+  const calles     = r.Calles_triangulacion || r.Calles || "";
+  const dia        = r.Dia_operativo || "-";
+  const franja     = r.Franja_operativa || "-";
+  const rango      = r.Rango_operativo_SAT || r.Rango_horario_total || "";
+  const conf       = r.Confiabilidad_leyenda || "-";
+  const radio      = r.Radio_m || 0;
+  const eventos    = r.Cantidad_eventos || 0;
+  const obs        = r["AC.OBS"] || r.Observaciones || r.OBS || "";
+  const ruta       = r.Link_Patrullaje_URL || "";
+  const pdf        = r.PDF_url || "";
 
+  
+  const radarID    = r.Alerta_ID || (r.Centroide_lat + "_" + r.Centroide_lng);
 
-window.buildSATTooltip = function(r){
   return `
-    <div style="font-size:.78rem; line-height:1.25;">
-      <b>ID:</b> ${r.Alerta_ID}<br>
-      <b>Distrito:</b> ${r.Distrito}<br>
-      <b>Comisaría:</b> ${r.Comisaria}<br>
-      <b>Cuadrante:</b> ${r.Cuadrante}<br>
-      <b>Calles:</b> ${r.Calles_triangulacion}<br>
-      <b>Día:</b> ${r.Dia_operativo}<br>
-      <b>Franja:</b> ${r.Franja_operativa}<br>
-      <b>Rango SAT:</b> ${r.Rango_operativo_SAT}<br>
-      <b>Conf.:</b> ${r.Confiabilidad_leyenda}<br>
-      <b>Obs:</b> ${r.OBS || ""}<br>
-      <a href="${r.Link_Patrullaje_URL}" target="_blank" style="color:#42A5F5;">Ruta</a> |
-      <a href="${r.PDF_url}" target="_blank" style="color:#42A5F5;">PDF</a>
-    </div>`;
+    <div class="sat-tooltip-pro">
+      <div class="sat-tooltip-row">
+        <b>${distrito}</b>${comisaria ? " / " + comisaria : ""}
+      </div>
+
+      ${zona ? `
+      <div class="sat-tooltip-row">
+        <b>Zona:</b> ${zona}
+      </div>` : ""}
+
+      ${cuadrante ? `
+      <div class="sat-tooltip-row">
+        <b>Cuad:</b> ${cuadrante}
+      </div>` : ""}
+
+      ${calles ? `
+      <div class="sat-tooltip-row">
+        <b>Calles:</b> ${calles}
+      </div>` : ""}
+
+      <div class="sat-tooltip-row">
+        <b>Día:</b> ${dia} // <b>Franja:</b> ${franja}
+      </div>
+
+      <div class="sat-tooltip-row">
+        ${rango ? `<b>Horario:</b> ${rango} // ` : ""}
+        <b>Radio:</b> ${radio} m // <b>Evts:</b> ${eventos}
+      </div>
+
+      <div class="sat-tooltip-row">
+        <b>Conf.:</b> ${conf}
+      </div>
+
+      ${obs ? `
+      <div class="sat-tooltip-row">
+        <b>Obs.:</b> ${obs}
+      </div>` : ""}
+
+      <div class="sat-tooltip-links sat-tooltip-row">
+        ${ruta ? `<a href="${ruta}" target="_blank">Ruta</a>` : ""}
+        ${(ruta && pdf) ? " | " : ""}
+        ${pdf ? `<a href="${pdf}" target="_blank">PDF</a>` : ""}
+      </div>
+
+      <div class="sat-tooltip-row">
+        <a href="#"
+           onclick="activateRadarFocus('${radarID}', ${Number(r.Centroide_lat)}, ${Number(r.Centroide_lng)})"
+           style="color:#ff1744;font-weight:bold;">
+           📡 Radar táctico
+        </a>
+      </div>
+    </div>
+  `;
 };
 
+
+
+
 // ======================================================================
-
-
+// RENDER PRINCIPAL — VERSIÓN FINAL SAT-PREVIENE
+// ======================================================================
 window.renderSATMap = function(rows, delitos = []) {
   const M   = window.SATMAP;
   const LYR = M.layers;
@@ -719,46 +820,70 @@ window.renderSATMap = function(rows, delitos = []) {
     return;
   }
 
-  
+  // Reiniciar capas (mantiene estado de visibilidad)
   resetMapLayers();
 
-  
+  // Bounds inteligente para ajustar zoom
   let bounds = L.latLngBounds();
 
-  
-  
-  
+  // ------------------------------------------------------------
+  // 1) ALERTAS / EVENTOS ESTUDIO (rows = zonas SAT filtradas)
+  // ------------------------------------------------------------
   rows.forEach(r => {
     const lat = Number(r.Centroide_lat);
     const lng = Number(r.Centroide_lng);
     if (!isFinite(lat) || !isFinite(lng)) return;
 
-    
-    if (r.Poligono_WKT) {
-      const poly = drawPoligonoSAT(r.Poligono_WKT);
-      if (poly) {
-        poly.addTo(LYR.poligonos);
-        bounds.extend(poly.getBounds());
-      }
-    }
-
-    
-    const cp = L.circleMarker([lat, lng], {
-      radius:      M.POINT_RADIUS + 3,
-      color: "#1976d2",
-      fillColor: "#1976d2",
-      fillOpacity: 0.9,
-      weight:      1,
-      pane:        "pane-centroids"
-    });
-
-    cp.bindTooltip(buildSATTooltip(r));
-    cp.addTo(LYR.centroides);
-    bounds.extend([lat, lng]);
+    // Polígono SAT (WKT)
+   if (r.Poligono_WKT) {
+  const poly = drawPoligonoSAT(r.Poligono_WKT);
+  if (poly) {
+    poly.addTo(LYR.poligonos);
+    // ❌ NO afectar bounds con polígonos
+  }
+}
 
 
+    // Centroides 
+const cp = L.circleMarker([lat, lng], {
+  radius:      M.POINT_RADIUS + 3,
+  color:       "#1976d2",
+  fillColor:   "#1976d2",
+  fillOpacity: 0.9,
+  weight:      1,
+  pane:        "pane-centroids"
+});
 
-    
+
+// Construir contenido del tooltip de forma segura
+console.log("TOOLTIP r=", r);
+let tipHtml = "";
+if (typeof window.buildSATTooltip === "function") {
+  tipHtml = window.buildSATTooltip(r) || "";
+}
+
+// Solo bind si hay contenido
+if (tipHtml.trim()) {
+  cp.bindTooltip(tipHtml, {
+    direction: "top",
+    sticky: true,
+    className: "sat-centroid-tip"
+  });
+
+  cp.on("click", function () {
+    this.openTooltip();
+  });
+}
+
+
+
+cp.addTo(LYR.centroides);
+bounds.extend([lat, lng]);
+
+
+
+
+    // Radios SAT
     const radio = Number(r.Radio_m) || 450;
 
     L.circle([lat, lng], {
@@ -771,9 +896,9 @@ window.renderSATMap = function(rows, delitos = []) {
     }).addTo(LYR.radios);
   });
 
-  
-  
-  
+  // ------------------------------------------------------------
+  // 2) DELITOS SECUNDARIOS
+  // ------------------------------------------------------------
   delitos.forEach(d => {
     if (!isFinite(d.lat) || !isFinite(d.lng)) return;
 
@@ -789,16 +914,16 @@ window.renderSATMap = function(rows, delitos = []) {
     bounds.extend([d.lat, d.lng]);
   });
 
-  
-  
-
+  // ------------------------------------------------------------
+  // 3) HEATMAP FILTRADO POR POLÍGONOS (TURF)
+// ------------------------------------------------------------
   const poligonosLeaflet = [];
   LYR.poligonos.eachLayer(p => poligonosLeaflet.push(p));
 
   const heatFiltered = calcularHeatmapFiltrado(
     poligonosLeaflet,
-    rows,     
-    delitos   
+    rows,     // centroides/alertas
+    delitos   // delitos secundarios
   );
   const heatData = [
   ...heatFiltered.delitos,
@@ -806,15 +931,15 @@ window.renderSATMap = function(rows, delitos = []) {
 ];
 
 
- 
+ // ------------------------------------------------------------
+// 🔥 HEATMAP AVANZADO — 3 MODOS
+// ------------------------------------------------------------
 
-
-
-
+// Seleccionar gradiente según modo y basemap
 let gradientFinal;
 
 if (SATMAP.HEAT_MODE === "operativo") {
-    
+    // Modo estándar (A + B)
     gradientFinal = (SATMAP.currentBase === "dark") ?
     {
       0.1: "#ffffb2",
@@ -835,7 +960,7 @@ if (SATMAP.HEAT_MODE === "operativo") {
 }
 
 if (SATMAP.HEAT_MODE === "umbral") {
-    
+    // Rojo → Azul (modo frío-caliente)
     gradientFinal = {
       0.0: "#0000ff",
       0.25:"#00ffff",
@@ -847,7 +972,7 @@ if (SATMAP.HEAT_MODE === "umbral") {
 }
 
 if (SATMAP.HEAT_MODE === "predictivo") {
-    
+    // Heatmap basado en decaimiento temporal fuerte
     gradientFinal = {
       0.1: "#ffe0b2",
       0.3: "#ffb74d",
@@ -857,7 +982,7 @@ if (SATMAP.HEAT_MODE === "predictivo") {
     };
 }
 
-
+// Construir el heatmap
 if (heatData.length && L.heatLayer) {
   LYR.heat = L.heatLayer(heatData, {
     radius:     M.HEAT_RADIUS,
@@ -870,17 +995,54 @@ if (heatData.length && L.heatLayer) {
 
 
 
-  
-  
-  
+  // ------------------------------------------------------------
+  // 4) APLICAR VISIBILIDAD (polígonos, radios, centroides, eventos…)
+  // ------------------------------------------------------------
   M.applyLayerVisibility();
 
-
-
-
+ // ------------------------------------------------------------
+// 5) ZOOM INTELIGENTE AVANZADO (fitBounds mejorado)
+// ------------------------------------------------------------
 if (SATMAP.SHOULD_FIT && bounds.isValid()) {
-    M.map.fitBounds(bounds, { padding: [40, 40] });
+
+  // 1) Ajuste suave / animado
+  const zoomOptions = {
+    paddingTopLeft:  [50, 50],
+    paddingBottomRight: [50, 50],
+    animate: true,
+    duration: 0.75    // transición suave
+  };
+
+  // Aplicar el fitBounds
+  M.map.fitBounds(bounds, zoomOptions);
+
+  // 2) Obtener zoom resultante
+  const finalZoom = M.map.getZoom();
+
+  // 3) Zoom mínimo y máximo permitido
+  const MIN_ZOOM = 12;  // evita zoom demasiado lejano
+  const MAX_ZOOM = 17;  // evita zoom demasiado cercano
+
+  if (finalZoom < MIN_ZOOM) {
+    M.map.setZoom(MIN_ZOOM, { animate: true });
+  }
+
+  if (finalZoom > MAX_ZOOM) {
+    M.map.setZoom(MAX_ZOOM, { animate: true });
+  }
+
+  // 4) Zoom más cercano si hay mucha densidad
+  if (rows.length >= 4) {               // 4+ alertas
+    M.map.setZoom(Math.min(MAX_ZOOM, finalZoom + 1), { animate: true });
+  }
+
+  // 5) Zonas críticas (≥3 eventos) → prioridad de zoom
+  const zonasCrit = rows.filter(r => Number(r.Cantidad_eventos) >= 3);
+  if (zonasCrit.length > 0) {
+    M.map.setZoom(MAX_ZOOM, { animate: true });
+  }
 }
+
 
 
   console.log("🗺️ renderSATMap completado:", rows.length, "eventos");
@@ -1249,6 +1411,8 @@ function renderAll() {
     const zonasAlta = rows.filter(r => computeCriticidad(r) === "Alta").length;
     kpiCrit.textContent = zonasAlta;
   }
+  
+centrarSegunFiltro();
 }
 
 
@@ -1294,6 +1458,12 @@ function initFilters() {
   const fDia     = document.getElementById("fDia");
   const fVentana = document.getElementById("fVentana");
   const fEstado  = document.getElementById("fEstado");
+  const fDesde = document.getElementById("fDesde");
+  const fHasta = document.getElementById("fHasta");
+  
+
+  if (fDesde && PERIOD.desdeISO) fDesde.value = PERIOD.desdeISO;
+  if (fHasta && PERIOD.hastaISO) fHasta.value = PERIOD.hastaISO;
 
   
   if (fDist) {
@@ -1305,30 +1475,53 @@ function initFilters() {
       fDist.appendChild(o);
     });
 
-    fDist.addEventListener("change", () => {
-      const distritoSel = fDist.value || "";
-      repoblarComisarias(distritoSel);
-      renderAll();
-    });
+fDist.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  const distritoSel = fDist.value || "";
+  repoblarComisarias(distritoSel);
+  renderAll();
+});
   }
 
   
   repoblarComisarias("");
 
-  
-  fCom?.addEventListener("change", renderAll);
-  fFranja?.addEventListener("change", renderAll);
-  fDia?.addEventListener("change", renderAll);
-  fVentana?.addEventListener("change", renderAll);
-  fEstado?.addEventListener("change", renderAll);
 
-  const fDesde = document.getElementById("fDesde");
-  const fHasta = document.getElementById("fHasta");
-  fDesde?.addEventListener("change", renderAll);
-  fHasta?.addEventListener("change", renderAll);
+fCom?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
 
-  if (fDesde && PERIOD.desdeISO) fDesde.value = PERIOD.desdeISO;
-  if (fHasta && PERIOD.hastaISO) fHasta.value = PERIOD.hastaISO;
+fFranja?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
+fDia?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
+fVentana?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
+fEstado?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
+fDesde?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
+fHasta?.addEventListener("change", () => {
+  SATMAP.SHOULD_FIT = true;
+  renderAll();
+});
+
 }
 
 
@@ -1434,29 +1627,91 @@ document.addEventListener("DOMContentLoaded", () => {
   initFilters();
   initButtons();
   updateHeaderKPI();
+  
+  
   renderAll();
+
+  
+  setTimeout(() => {
+    centrarPorDensidadInicial();
+  }, 300);
 });
+
+
+function centrarPorDensidadInicial() {
+  try {
+    const rows = window.LAST_ROWS || [];
+    if (!rows.length) return;
+
+    
+    const max = rows.reduce((a, b) => {
+      return (Number(b.Cantidad_eventos) || 0) > (Number(a.Cantidad_eventos) || 0) ? b : a;
+    });
+
+    const lat = Number(max.Centroide_lat);
+    const lng = Number(max.Centroide_lng);
+
+    if (isFinite(lat) && isFinite(lng)) {
+      window.SATMAP.map.setView([lat, lng], 15, { animate: true });
+    }
+
+  } catch (err) {
+    console.warn("⚠ No fue posible centrar por densidad inicial:", err);
+  }
+}
+
+function centrarSegunFiltro() {
+  try {
+    const rows = window.LAST_ROWS || [];
+    if (!rows.length) return;   
+
+    
+    const max = rows.reduce((a, b) => {
+      return (Number(b.Cantidad_eventos) || 0) > (Number(a.Cantidad_eventos) || 0) ? b : a;
+    });
+
+    const lat = Number(max.Centroide_lat);
+    const lng = Number(max.Centroide_lng);
+
+    if (isFinite(lat) && isFinite(lng)) {
+      window.SATMAP.map.setView([lat, lng], 15, { animate: true });
+    }
+
+  } catch (err) {
+    console.warn("⚠ Error centrando según filtro:", err);
+  }
+}
+
+
+
+
+
 
 
 
 document.getElementById("hmOperativo")?.addEventListener("click", ()=>{
-  SATMAP.HEAT_MODE = "operativo";
-  renderAll();
-  SATMAP.SHOULD_FIT = true;
+  SATMAP.SHOULD_FIT = false;           
+  SATMAP.HEAT_MODE  = "operativo";
+  renderAll();                          
+  SATMAP.SHOULD_FIT = true;             
 });
+
 
 document.getElementById("hmUmbral")?.addEventListener("click", ()=>{
-  SATMAP.SHOULD_FIT = false;
-SATMAP.HEAT_MODE = "umbral";
-renderAll();
-SATMAP.SHOULD_FIT = true;
+  SATMAP.SHOULD_FIT = false;           
+  SATMAP.HEAT_MODE  = "umbral";
+  renderAll();
+  SATMAP.SHOULD_FIT = true;             
 });
 
+
 document.getElementById("hmPredictivo")?.addEventListener("click", ()=>{
-  SATMAP.HEAT_MODE = "predictivo";
+  SATMAP.SHOULD_FIT = false;           
+  SATMAP.HEAT_MODE  = "predictivo";
   renderAll();
-  SATMAP.SHOULD_FIT = true;
+  SATMAP.SHOULD_FIT = true;             
 });
+
 
 
 
@@ -1490,37 +1745,6 @@ window.SATRADAR = {
   }
 };
 
-
-
-
-window.buildSATTooltip = function (r) {
-  const chip = [r.Distrito, r.Comisaria].filter(Boolean).join(" / ");
-  const rango = r.Rango_operativo_SAT || r.Rango_horario_total || "";
-
-  const partes = [
-    chip && `<b>${chip}</b>`,
-    r.Zona_centroide && `<b>Zona:</b> ${r.Zona_centroide}`,
-    r.Cuadrante && `<b>Cuadrante:</b> ${r.Cuadrante}`,
-    `<b>Día/Franja:</b> ${r.Dia_operativo || "-"} · ${r.Franja_operativa || "-"}`,
-    rango && `<b>Horario:</b> ${rango}`,
-    `<b>Radio:</b> ${r.Radio_m || 0} m · <b>Eventos:</b> ${r.Cantidad_eventos || 0}`,
-    r.Confiabilidad_leyenda && `<b>Confiabilidad:</b> ${r.Confiabilidad_leyenda}`,
-    r.Observaciones && `<b>Obs.:</b> ${r.Observaciones}`,
-    r.Link_Patrullaje_URL &&
-    `<b>Ruta:</b> <a href="${r.Link_Patrullaje_URL}" target="_blank">Maps</a>`,
-    r.PDF_url &&
-    `<b>PDF:</b> <a href="${r.PDF_url}" target="_blank">Orden</a>`,
-    `<a href="#"
-        onclick="activateRadarFocus('${r.Alerta_ID || r.Centroide_lat + '_' + r.Centroide_lng}',
-                                    ${Number(r.Centroide_lat)},
-                                    ${Number(r.Centroide_lng)})"
-        style="color:#ff1744;font-weight:bold;">
-        📡 Radar táctico
-     </a>`
-  ].filter(Boolean);
-
-  return `<div>${partes.join("<br>")}</div>`;
-};
 
 
 
